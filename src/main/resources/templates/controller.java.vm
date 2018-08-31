@@ -1,0 +1,128 @@
+package ${package.Controller};
+
+
+
+
+import com.magicbeans.base.Pages;
+import com.magicbeans.base.ajax.ResponseData;
+import com.magicbeans.framework.Message;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import com.magicbeans.base.kit.StrKit;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import javax.validation.Valid;
+import ${package.Service}.${table.serviceName};
+import ${package.Entity}.$!{entity};
+import ${superControllerClass}
+
+#if(${restControllerStyle})
+import org.springframework.web.bind.annotation.RestController;
+#else
+import org.springframework.stereotype.Controller;
+#end
+#if(${superControllerClassPackage})
+import ${superControllerClassPackage};
+#end
+
+/**
+ * <p>
+ * $!{table.comment} 前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+#if(${restControllerStyle})
+@RestController
+#else
+@Controller
+#end
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+#if(${kotlin})
+class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
+
+#else
+#if(${superControllerClass})
+public class ${table.controllerName} extends ${superControllerClass} {
+#else
+public class ${table.controllerName} {
+#end
+
+    #set($serviceName="$!{table.entityPath}Service")
+
+    @Autowired
+    private  ${table.serviceName} $!{serviceName};
+
+
+    /**
+    * 跳转到列表页面
+    */
+    @GetMapping("list")
+    public String list(Pages pages, Model model ){
+        model.addAttribute("page", $!{serviceName}.findPage(pages,null,null));
+        return "$!{table.entityPath}/list";
+    }
+
+    /**
+    * 跳转添加页面
+    * @return
+    */
+    @GetMapping("add")
+    public String toAdd(Model model){
+        return "$!{table.entityPath}/add";
+    }
+
+
+    /**
+    * 编辑$!{entity}
+    * @param id
+    * @param model
+    * @return
+    */
+    @GetMapping("edit")
+    public String edit(@RequestParam String id,Model model){
+        model.addAttribute("$!{entity.toLowerCase()}",$!{serviceName}.find(id));
+        return "$!{table.entityPath}/edit";
+    }
+
+    /**
+     * 根据ID刪除$!{entity}
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping(value = "del/{id}")
+    @ResponseBody
+    public ResponseData del(@PathVariable String id) {
+        ResponseData result = new ResponseData();
+        $!{serviceName}.delete(id);
+        return result;
+    }
+
+/**
+    * 保存$!{entity}
+    *
+    * @param $!{entity.toLowerCase()}
+    * @param model
+    * @return
+    */
+    @PostMapping(value = "save")
+    public String save(@Valid $!{entity} $!{entity.toLowerCase()}, Model model, RedirectAttributes redirectAttributes) {
+        if (StrKit.isEmpty($!{entity.toLowerCase()}.getId())) {
+            $!{serviceName}.save($!{entity.toLowerCase()});
+        } else {
+            $!{serviceName}.update($!{entity.toLowerCase()});
+        }
+
+        addFlashMessage(redirectAttributes,new Message(Message.Type.success,"保存成功"));
+        return redirect("list");
+    }
+
+
+}
+
+#end
