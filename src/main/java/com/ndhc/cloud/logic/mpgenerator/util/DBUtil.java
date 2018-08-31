@@ -129,21 +129,15 @@ public class DBUtil {
     String port= dbConfig.getPort();
     String dataBaseName=dbConfig.getDataBaseName();
     String dbType= dbConfig.getDbType().getValue();
-     //dbType.getValue();
-     if (!RegexMatches.ipVoild(IP)){
-       return false;
-     }else if(!RegexMatches.ipVoild(port)){
-         return false;
-     }
-     if("MYSQL".equals(dbType)){
+     if("MYSQL".equalsIgnoreCase(dbType)){
          dbConfig.setDbUrl("jdbc:mysql://"+IP+":"+port+"/"+dataBaseName+"?characterEncoding=utf8");
-     }else if("ORACLE".equals(dbType)){
+     }else if("ORACLE".equalsIgnoreCase(dbType)){
          dbConfig.setDbUrl("jdbc:oracle:thin:@"+IP+":"+port+":"+dataBaseName);
-     }else if("SQL_SERVER2000".equals(dbType)){
+     }else if("SQL_SERVER2000".equalsIgnoreCase(dbType)){
          dbConfig.setDbUrl("jdbc:microsoft:sqlserver://"+IP+":"+port+";DatabaseName="+dataBaseName);
-     }else if("SQL_SERVER2005".equals(dbType)){
+     }else if("SQL_SERVER2005".equalsIgnoreCase(dbType)){
          dbConfig.setDbUrl("jdbc:sqlserver://"+IP+":"+port+";DatabaseName="+dataBaseName);
-     }else if("POSTGRE_SQL".equals(dbType)){
+     }else if("POSTGRE_SQL".equalsIgnoreCase(dbType)){
          dbConfig.setDbUrl("jdbc:postgresql://"+IP+":"+port+"/"+dataBaseName);
      }
      return true;

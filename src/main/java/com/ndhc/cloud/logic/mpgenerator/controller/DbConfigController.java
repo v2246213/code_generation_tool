@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,8 +79,40 @@ public ResultModel findTableInfo(@RequestBody DbConfig dbConfig){
    * @return
    */
   @PostMapping("/generateCode")
-  public ResultModel generateCode(@RequestBody Dbparm dbparm) {
-         // ​dbConfigService.generateCode(dbparm);
+  public ResultModel generateCode(@RequestBody Dbparm dbparm, HttpServletResponse response) throws          IOException{
+      List<DbConfig>  dbConfigs=dbConfigService.generateCode(dbparm);
+      for (DbConfig dbConfig : dbConfigs) {
+
+      ByteArrayOutputStream os = new ByteArrayOutputStream();
+      byte[] content = os.toByteArray();
+      InputStream is = new ByteArrayInputStream(content);
+      // 设置response参数，可以打开下载页面
+      response.reset();
+      response.setContentType("application/vnd.ms-excel;charset=utf-8");
+      response.addHeader("Access-Control-Allow-Origin", "*");
+      response.addHeader("Content-Disposition", "attachment;filename="+new String(dbConfig.getPackageName().getBytes("utf-8"), "iso8859-1")+".zip");
+      ServletOutputStream out = response.getOutputStream();
+      BufferedInputStream bis = null;
+      BufferedOutputStream bos = null;
+      try {
+          bis = new BufferedInputStream(is);
+          bos = new BufferedOutputStream(out);
+          byte[] buff = new byte[2048];
+          int bytesRead;
+          // Simple read/write loop.
+          while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+              bos.write(buff, 0, bytesRead);
+          }
+      } catch (final IOException e) {
+          throw e;
+      } finally {
+          if (bis != null)
+              bis.close();
+          if (bos != null)
+              bos.close();
+      }
+      }
+
     return ResultModel.buildSuccess( "生成成功");
   }
 

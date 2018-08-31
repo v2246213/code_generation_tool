@@ -31,7 +31,7 @@ public interface DbConfigService {
      * 根据选中的配置生成代码
      * @return
      */
-    Object generateCode(Dbparm dbparm);
+    List<DbConfig> generateCode(Dbparm dbparm);
 
     /**
      * 根据用户配置的id查询生成代码的内容

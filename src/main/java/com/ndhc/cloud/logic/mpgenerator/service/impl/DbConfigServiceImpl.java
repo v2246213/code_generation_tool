@@ -21,6 +21,7 @@ import java.util.Map;
 /**
  * @author yangnian
  * @datc 2018/8/29 15:19
+ *
  */
 @Service
 public class DbConfigServiceImpl implements DbConfigService {
@@ -150,24 +151,28 @@ public class DbConfigServiceImpl implements DbConfigService {
      * @return
      */
     @Override
-    public Object  generateCode(Dbparm dbparm) {
+    public List<DbConfig>  generateCode(Dbparm dbparm) {
         List<DbConfig> dbConfigs=new ArrayList<>();
        List<UserConfig> userConfigList= this.findUserConfig(dbparm.getUserConfigs());
         for (UserConfig userConfig : userConfigList) {
             Map<String, Object> map = JsonUtil.jsonToMap(userConfig.getConfigJson());
+           String dbType= map.get("dbType").toString();
+            String [] excludeTable = map.get("excludeTable").toString().split(",");
+           String[] superEntityColumns=map.get("superEntityColumns").toString().split(",");
+           String[]  tablePrefix=map.get("tablePrefix").toString().split(",");
            try {
                //map转javaBean
               DbConfig dbConfig=(DbConfig)MapUtil.mapToObject(map,DbConfig.class);
+              dbConfig.setDbType(dbType);
+               dbConfig.setExcludeTable(excludeTable);
+               dbConfig.setSuperEntityColumns(superEntityColumns);
+               dbConfig.setTablePrefix(tablePrefix);
                dbConfigs.add(dbConfig);
-              if (!DBUtil.driverType(dbConfig)){
-                  return "dbUrl不对";
-              }
                MpGenerator.genCode(dbConfig);
            }catch (Exception e){
                e.printStackTrace();
                LGR.error("实体转换失败");
            }
-
         }
         //转换完毕
         return dbConfigs;

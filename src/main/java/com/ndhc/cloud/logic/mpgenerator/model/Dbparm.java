@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Dbparm {
     List<DbConfig> dbConfigList;
- List<UserConfig> userConfigs;
+    List<UserConfig> userConfigs;
 
     public List<UserConfig> getUserConfigs() {
         return userConfigs;
