@@ -124,7 +124,7 @@ public class DBUtil {
      * 数据库驱动类型识别
      * @return
      */
- public static Boolean     driverType(DbConfig dbConfig){
+ public static DbConfig     driverType(DbConfig dbConfig){
     String IP= dbConfig.getIp();
     String port= dbConfig.getPort();
     String dataBaseName=dbConfig.getDataBaseName();
@@ -140,7 +140,7 @@ public class DBUtil {
      }else if("POSTGRE_SQL".equalsIgnoreCase(dbType)){
          dbConfig.setDbUrl("jdbc:postgresql://"+IP+":"+port+"/"+dataBaseName);
      }
-     return true;
+     return dbConfig;
  }
 
 

@@ -1,6 +1,5 @@
 package com.ndhc.cloud.logic.mpgenerator.service.impl;
 
-import com.mysql.jdbc.JDBC4PreparedStatement;
 import com.ndhc.cloud.logic.mpgenerator.entity.DbConfig;
 import com.ndhc.cloud.logic.mpgenerator.entity.TableInfo;
 import com.ndhc.cloud.logic.mpgenerator.entity.UserConfig;
@@ -17,6 +16,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.ndhc.cloud.logic.mpgenerator.util.DBUtil.driverType;
 
 /**
  * @author yangnian
@@ -78,7 +79,7 @@ public class DbConfigServiceImpl implements DbConfigService {
      * @return
      */
     @Override
-    public void insertDbConfig(UserConfig userConfig) {
+    public void saveDbConfig(UserConfig userConfig) {
         Connection conn = DBUtil.getConnection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -157,7 +158,7 @@ public class DbConfigServiceImpl implements DbConfigService {
         for (UserConfig userConfig : userConfigList) {
             Map<String, Object> map = JsonUtil.jsonToMap(userConfig.getConfigJson());
            String dbType= map.get("dbType").toString();
-            String [] excludeTable = map.get("excludeTable").toString().split(",");
+           String [] excludeTable = map.get("excludeTable").toString().split(",");
            String[] superEntityColumns=map.get("superEntityColumns").toString().split(",");
            String[]  tablePrefix=map.get("tablePrefix").toString().split(",");
            try {
@@ -167,6 +168,7 @@ public class DbConfigServiceImpl implements DbConfigService {
                dbConfig.setExcludeTable(excludeTable);
                dbConfig.setSuperEntityColumns(superEntityColumns);
                dbConfig.setTablePrefix(tablePrefix);
+               dbConfig=driverType(dbConfig);
                dbConfigs.add(dbConfig);
                MpGenerator.genCode(dbConfig);
            }catch (Exception e){

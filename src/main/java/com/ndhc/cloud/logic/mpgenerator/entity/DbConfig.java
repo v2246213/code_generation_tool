@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.generator.config.rules.DbType;
  * @datc 2018/8/29 15:03
  */
 public class DbConfig {
+    //项目名
+    private  String projectName;
     //数据库地址
     private String dbUrl;
    //用户名
@@ -62,6 +64,14 @@ public class DbConfig {
      *大小写
      */
     private Boolean capitalMode = Boolean.FALSE;
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
 
     public String getIp() {
         return ip;

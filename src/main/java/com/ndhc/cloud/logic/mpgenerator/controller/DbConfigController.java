@@ -57,20 +57,20 @@ public ResultModel findTableInfo(@RequestBody DbConfig dbConfig){
         UserConfig userConfig=new UserConfig();
         userConfig.setConfigJson(configJson);
         userConfig.setProjectName(projectName);
-        dbConfigService.insertDbConfig(userConfig);
+        dbConfigService.saveDbConfig(userConfig);
         return ResultModel.buildSuccess("保存成功");
     }
 
-   /* *//**
+    /**
      *保存生成代码配置
      * @param dbparm
      * @return
-     *//*
+     */
     @PostMapping("/findUserConfig")
     public ResultModel findUserConfig(@RequestBody Dbparm dbparm){
         List<UserConfig> userConfigList= dbConfigService.findUserConfig(dbparm.getUserConfigs());
         return ResultModel.buildSuccess(userConfigList);
-    }*/
+    }
 
 
   /**
@@ -82,15 +82,14 @@ public ResultModel findTableInfo(@RequestBody DbConfig dbConfig){
   public ResultModel generateCode(@RequestBody Dbparm dbparm, HttpServletResponse response) throws          IOException{
       List<DbConfig>  dbConfigs=dbConfigService.generateCode(dbparm);
       for (DbConfig dbConfig : dbConfigs) {
-
-      ByteArrayOutputStream os = new ByteArrayOutputStream();
-      byte[] content = os.toByteArray();
-      InputStream is = new ByteArrayInputStream(content);
+          InputStream input = new FileInputStream(file);
+          byte[] content = new byte[input.available()];
+          InputStream is = new ByteArrayInputStream(content);
       // 设置response参数，可以打开下载页面
       response.reset();
       response.setContentType("application/vnd.ms-excel;charset=utf-8");
       response.addHeader("Access-Control-Allow-Origin", "*");
-      response.addHeader("Content-Disposition", "attachment;filename="+new String(dbConfig.getPackageName().getBytes("utf-8"), "iso8859-1")+".zip");
+      response.addHeader("Content-Disposition", "attachment;filename="+new String(dbConfig.getProjectName().getBytes("utf-8"), "iso8859-1")+".zip");
       ServletOutputStream out = response.getOutputStream();
       BufferedInputStream bis = null;
       BufferedOutputStream bos = null;
@@ -112,8 +111,7 @@ public ResultModel findTableInfo(@RequestBody DbConfig dbConfig){
               bos.close();
       }
       }
-
-    return ResultModel.buildSuccess( "生成成功");
+    return ResultModel.buildSuccess(dbConfigs);
   }
 
 }

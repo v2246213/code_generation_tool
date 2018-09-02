@@ -26,7 +26,7 @@ public interface DbConfigService {
      * @param userConfig
      * @return
      */
-    void     insertDbConfig(UserConfig userConfig);
+    void     saveDbConfig(UserConfig userConfig);
     /**
      * 根据选中的配置生成代码
      * @return
