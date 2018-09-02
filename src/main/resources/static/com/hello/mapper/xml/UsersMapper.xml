@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hello.mapper.UsersMapper">
+
+    <!-- 开启二级缓存 -->
+    <cache type="com.magicbeans.framework.mybatis.cache.MybatisRedisCache"/>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hello.entity.Users">
+    <result column="id" property="id" />
+        <result column="c_username" property="cUsername" />
+        <result column="c_pwd" property="cPwd" />
+        <result column="c_phone" property="cPhone" />
+        <result column="n_age" property="nAge" />
+        <result column="n_sex" property="nSex" />
+        <result column="c_createDate" property="cCreatedate" />
+        <result column="n_creater" property="nCreater" />
+        <result column="c_updateDate" property="cUpdatedate" />
+        <result column="n_updater" property="nUpdater" />
+        <result column="n_deleted" property="nDeleted" />
+        <result column="n_status" property="nStatus" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+    id,
+        c_username AS cUsername, c_pwd AS cPwd, c_phone AS cPhone, n_age AS nAge, n_sex AS nSex, c_createDate AS cCreatedate, n_creater AS nCreater, c_updateDate AS cUpdatedate, n_updater AS nUpdater, n_deleted AS nDeleted, n_status AS nStatus
+    </sql>
+
+</mapper>

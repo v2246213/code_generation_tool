@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hello.mapper.SysRolePermissionMapper">
+
+    <!-- 开启二级缓存 -->
+    <cache type="com.magicbeans.framework.mybatis.cache.MybatisRedisCache"/>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.hello.entity.SysRolePermission">
+    <result column="id" property="id" />
+        <result column="n_permission_id" property="nPermissionId" />
+        <result column="n_role_id" property="nRoleId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+    id,
+        n_permission_id AS nPermissionId, n_role_id AS nRoleId
+    </sql>
+
+</mapper>
